@@ -1,21 +1,20 @@
 import ExpenseCard from "./ExpenseCard";
 
-function ExpenseList() {
+function ExpenseList(props) {
   return (
     <div>
       <h2>Recent Expenses</h2>
 
-      <ExpenseCard
-        name="Pizza"
-        category="Food"
-        amount="250"
-      />
-
-      <ExpenseCard
-        name="Bus Ticket"
-        category="Travel"
-        amount="50"
-      />
+      {props.expenses.map((expense) => (
+        <ExpenseCard
+          key={expense.id}
+          id={expense.id}
+          name={expense.name}
+          category={expense.category}
+          amount={expense.amount}
+          deleteExpense={props.deleteExpense}
+        />
+      ))}
     </div>
   );
 }
