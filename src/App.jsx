@@ -1,13 +1,15 @@
+import Header from "./components/Header";
+import SummaryCard from "./components/SummaryCard";
+import ExpenseList from "./components/ExpenseList";
+
 function App() {
   return (
     <div>
-      <h1>Student Expense Tracker</h1>
+      <Header />
 
-      <p>Track your daily expenses easily.</p>
+      <SummaryCard total="300" />
 
-      <h2>Total Expenses: ₹0</h2>
-
-      <button>Add Expense</button>
+      <ExpenseList />
     </div>
   );
 }
