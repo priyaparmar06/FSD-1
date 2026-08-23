@@ -1,5 +1,16 @@
-import { useEffect, useState } from "react";
-import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import {
+  useEffect,
+  useState,
+  useMemo,
+  useCallback
+} from "react";
+
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Link
+} from "react-router-dom";
 
 import Header from "./components/Header";
 import SummaryCard from "./components/SummaryCard";
@@ -39,23 +50,30 @@ function App() {
     );
   }, [expenses]);
 
-  function addExpense(newExpense) {
-    setExpenses([...expenses, newExpense]);
-  }
+  const addExpense = useCallback((newExpense) => {
+    setExpenses((currentExpenses) => [
+      ...currentExpenses,
+      newExpense
+    ]);
+  }, []);
 
-  function deleteExpense(id) {
-    const updatedExpenses = expenses.filter(
-      (expense) => expense.id !== id
+  const deleteExpense = useCallback((id) => {
+    setExpenses((currentExpenses) =>
+      currentExpenses.filter(
+        (expense) => expense.id !== id
+      )
     );
+  }, []);
 
-    setExpenses(updatedExpenses);
-  }
+  const total = useMemo(() => {
+    let totalAmount = 0;
 
-  let total = 0;
+    expenses.forEach((expense) => {
+      totalAmount = totalAmount + expense.amount;
+    });
 
-  expenses.forEach((expense) => {
-    total = total + expense.amount;
-  });
+    return totalAmount;
+  }, [expenses]);
 
   return (
     <BrowserRouter>

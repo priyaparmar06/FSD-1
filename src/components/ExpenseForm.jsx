@@ -1,29 +1,35 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 
 function ExpenseForm(props) {
   const [name, setName] = useState("");
-  const [category, setCategory] = useState("");
+  const [category, setCategory] = useState("Food");
   const [amount, setAmount] = useState("");
+
+  const nameInputRef = useRef(null);
 
   function handleSubmit(event) {
     event.preventDefault();
 
-    if (name === "" || category === "" || amount === "") {
-      return;
+    if (name !== "" && amount !== "") {
+      const newExpense = {
+        id: Date.now(),
+        name: name,
+        category: category,
+        amount: Number(amount)
+      };
+
+      props.addExpense(newExpense);
+
+      setName("");
+      setCategory("Food");
+      setAmount("");
+
+      nameInputRef.current.focus();
     }
+  }
 
-    const newExpense = {
-      id: Date.now(),
-      name: name,
-      category: category,
-      amount: Number(amount)
-    };
-
-    props.addExpense(newExpense);
-
-    setName("");
-    setCategory("");
-    setAmount("");
+  function focusNameInput() {
+    nameInputRef.current.focus();
   }
 
   return (
@@ -32,18 +38,23 @@ function ExpenseForm(props) {
 
       <form onSubmit={handleSubmit}>
         <input
+          ref={nameInputRef}
           type="text"
           placeholder="Expense Name"
           value={name}
           onChange={(event) => setName(event.target.value)}
         />
 
-        <input
-          type="text"
-          placeholder="Category"
+        <select
           value={category}
           onChange={(event) => setCategory(event.target.value)}
-        />
+        >
+          <option value="Food">Food</option>
+          <option value="Travel">Travel</option>
+          <option value="Education">Education</option>
+          <option value="Shopping">Shopping</option>
+          <option value="Other">Other</option>
+        </select>
 
         <input
           type="number"
@@ -52,8 +63,14 @@ function ExpenseForm(props) {
           onChange={(event) => setAmount(event.target.value)}
         />
 
-        <button type="submit">Add Expense</button>
+        <button type="submit">
+          Add Expense
+        </button>
       </form>
+
+      <button onClick={focusNameInput}>
+        Focus Expense Name
+      </button>
     </div>
   );
 }
