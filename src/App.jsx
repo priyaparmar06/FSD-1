@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react";
+import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 
 import Header from "./components/Header";
 import SummaryCard from "./components/SummaryCard";
-import ExpenseForm from "./components/ExpenseForm";
-import ExpenseList from "./components/ExpenseList";
+
+import Home from "./pages/Home";
+import Expenses from "./pages/Expenses";
+import About from "./pages/About";
 
 function App() {
   const [expenses, setExpenses] = useState(() => {
@@ -29,7 +32,6 @@ function App() {
     ];
   });
 
-  // Runs whenever the expenses change
   useEffect(() => {
     localStorage.setItem(
       "studentExpenses",
@@ -56,18 +58,44 @@ function App() {
   });
 
   return (
-    <div>
-      <Header />
+    <BrowserRouter>
+      <div>
+        <Header />
 
-      <SummaryCard total={total} />
+        <nav>
+          <Link to="/">Home</Link>{" | "}
+          <Link to="/expenses">Expenses</Link>{" | "}
+          <Link to="/about">About</Link>
+        </nav>
 
-      <ExpenseForm addExpense={addExpense} />
+        <Routes>
+          <Route
+            path="/"
+            element={<Home />}
+          />
 
-      <ExpenseList
-        expenses={expenses}
-        deleteExpense={deleteExpense}
-      />
-    </div>
+          <Route
+            path="/expenses"
+            element={
+              <div>
+                <SummaryCard total={total} />
+
+                <Expenses
+                  expenses={expenses}
+                  addExpense={addExpense}
+                  deleteExpense={deleteExpense}
+                />
+              </div>
+            }
+          />
+
+          <Route
+            path="/about"
+            element={<About />}
+          />
+        </Routes>
+      </div>
+    </BrowserRouter>
   );
 }
 
