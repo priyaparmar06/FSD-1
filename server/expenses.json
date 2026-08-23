@@ -1,0 +1,14 @@
+[
+  {
+    "id": 1,
+    "name": "Pizza",
+    "category": "Food",
+    "amount": 250
+  },
+  {
+    "id": 2,
+    "name": "Bus Ticket",
+    "category": "Travel",
+    "amount": 50
+  }
+]

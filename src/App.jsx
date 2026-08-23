@@ -1,7 +1,6 @@
 import {
   useEffect,
   useState,
-  useMemo,
   useCallback
 } from "react";
 
@@ -13,42 +12,24 @@ import {
 } from "react-router-dom";
 
 import Header from "./components/Header";
-import SummaryCard from "./components/SummaryCard";
-
 import Home from "./pages/Home";
 import Expenses from "./pages/Expenses";
 import About from "./pages/About";
 
 function App() {
-  const [expenses, setExpenses] = useState(() => {
-    const savedExpenses = localStorage.getItem("studentExpenses");
-
-    if (savedExpenses) {
-      return JSON.parse(savedExpenses);
-    }
-
-    return [
-      {
-        id: 1,
-        name: "Pizza",
-        category: "Food",
-        amount: 250
-      },
-      {
-        id: 2,
-        name: "Bus Ticket",
-        category: "Travel",
-        amount: 50
-      }
-    ];
-  });
+  const [expenses, setExpenses] = useState([]);
 
   useEffect(() => {
-    localStorage.setItem(
-      "studentExpenses",
-      JSON.stringify(expenses)
-    );
-  }, [expenses]);
+    fetch("http://localhost:5000/api/expenses")
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("API Data:", data);
+        setExpenses(data);
+      })
+      .catch((error) => {
+        console.log("API Error:", error);
+      });
+  }, []);
 
   const addExpense = useCallback((newExpense) => {
     setExpenses((currentExpenses) => [
@@ -64,16 +45,6 @@ function App() {
       )
     );
   }, []);
-
-  const total = useMemo(() => {
-    let totalAmount = 0;
-
-    expenses.forEach((expense) => {
-      totalAmount = totalAmount + expense.amount;
-    });
-
-    return totalAmount;
-  }, [expenses]);
 
   return (
     <BrowserRouter>
@@ -95,15 +66,11 @@ function App() {
           <Route
             path="/expenses"
             element={
-              <div>
-                <SummaryCard total={total} />
-
-                <Expenses
-                  expenses={expenses}
-                  addExpense={addExpense}
-                  deleteExpense={deleteExpense}
-                />
-              </div>
+              <Expenses
+                expenses={expenses}
+                addExpense={addExpense}
+                deleteExpense={deleteExpense}
+              />
             }
           />
 
