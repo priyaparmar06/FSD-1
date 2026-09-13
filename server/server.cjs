@@ -1,4 +1,6 @@
-const http = require("http");
+const express = require("express");
+
+const app = express();
 
 const expenses = [
   {
@@ -15,53 +17,14 @@ const expenses = [
   }
 ];
 
-const server = http.createServer((req, res) => {
-  res.setHeader(
-    "Access-Control-Allow-Origin",
-    "http://localhost:5173"
-  );
-
-  res.setHeader(
-    "Access-Control-Allow-Methods",
-    "GET, POST, DELETE, OPTIONS"
-  );
-
-  res.setHeader(
-    "Access-Control-Allow-Headers",
-    "Content-Type"
-  );
-
-  if (req.method === "OPTIONS") {
-    res.writeHead(204);
-    res.end();
-    return;
-  }
-
-  if (req.url === "/api/expenses") {
-    res.writeHead(200, {
-      "Content-Type": "application/json"
-    });
-
-    res.end(JSON.stringify(expenses));
-    return;
-  }
-
-  if (req.url === "/") {
-    res.writeHead(200, {
-      "Content-Type": "text/plain"
-    });
-
-    res.end("Student Expense Tracker API is running");
-    return;
-  }
-
-  res.writeHead(404, {
-    "Content-Type": "text/plain"
-  });
-
-  res.end("Route not found");
+app.get("/", (req, res) => {
+  res.send("Student Expense Tracker API is running");
 });
 
-server.listen(5000, () => {
-  console.log("Server running at http://localhost:5000");
+app.get("/api/expenses", (req, res) => {
+  res.json(expenses);
+});
+
+app.listen(5000, () => {
+  console.log("Express server running at http://localhost:5000");
 });
